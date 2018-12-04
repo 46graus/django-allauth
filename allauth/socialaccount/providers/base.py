@@ -88,15 +88,17 @@ class Provider(object):
         common_fields = self.extract_common_fields(response)
         socialaccount = SocialAccount(extra_data=extra_data,
                                       uid=uid,
-                                      provider=self.id)
+                                      provider=self.id,
+                                      user_id=request.user.id)
         email_addresses = self.extract_email_addresses(response)
         self.cleanup_email_addresses(common_fields.get('email'),
                                      email_addresses)
-        sociallogin = SocialLogin(account=socialaccount,
+        sociallogin = SocialLogin(user=request.user,
+                                  account=socialaccount,
                                   email_addresses=email_addresses)
-        user = sociallogin.user = adapter.new_user(request, sociallogin)
-        user.set_unusable_password()
-        adapter.populate_user(request, sociallogin, common_fields)
+        # user = sociallogin.user = adapter.new_user(request, sociallogin)
+        # user.set_unusable_password()
+        # adapter.populate_user(request, sociallogin, common_fields)
         return sociallogin
 
     def extract_uid(self, data):
