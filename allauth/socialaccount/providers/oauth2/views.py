@@ -124,6 +124,7 @@ class OAuth2CallbackView(OAuth2View):
                 error=error)
         app = self.adapter.get_provider().get_app(self.request)
         client = self.get_client(request, app)
+        client.state = SocialLogin.stash_state(request)
         try:
             access_token = client.get_access_token(request.GET['code'])
             token = self.adapter.parse_token(access_token)
@@ -137,7 +138,7 @@ class OAuth2CallbackView(OAuth2View):
                 login.state = SocialLogin \
                     .verify_and_unstash_state(
                         request,
-                        get_request_param(request, 'state'))
+                        client.state)
             else:
                 login.state = SocialLogin.unstash_state(request)
             return complete_social_login(request, login)

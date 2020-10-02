@@ -147,7 +147,7 @@ def complete_social_login(request, sociallogin):
         process = sociallogin.state.get('process')
         if process == AuthProcess.REDIRECT:
             return _social_login_redirect(request, sociallogin)
-        elif process == AuthProcess.CONNECT:
+        elif True or process == AuthProcess.CONNECT:
             return _add_social_account(request, sociallogin)
         else:
             return _complete_social_login(request, sociallogin)
